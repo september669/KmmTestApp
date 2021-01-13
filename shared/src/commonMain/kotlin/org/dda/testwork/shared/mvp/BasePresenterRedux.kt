@@ -1,6 +1,10 @@
-package org.dda.testwork.shared.mvp.redux
+package org.dda.testwork.shared.mvp
 
+import kotlinx.atomicfu.atomic
 import org.dda.ankoLogger.AnkoLogger
+import org.dda.ankoLogger.logDebug
+import org.dda.testwork.shared.mvp.base.BasePresenter
+import org.dda.testwork.shared.mvp.redux.*
 
 
 /***
@@ -9,27 +13,14 @@ import org.dda.ankoLogger.AnkoLogger
  *   View --(Effect)--> Presenter --(Effect)--> Redux.effector
  *
  */
-interface BaseViewRedux<State : ReduxState>
-/*
 
 
-fun <State : ReduxState> initState(block: () -> State) = BuilderState(block)
-
-fun <State : ReduxState, Action : ReduxAction> BuilderState<State>.withActions(reducer: ReduxReducer<State, Action>) =
-    BuilderReducer(this@withActions, reducer)
-
-fun <State : ReduxState,
-        Action : ReduxAction,
-        Effect : ReduxSideEffect>
-        BuilderReducer<State, Action>.withSideEffects(block: ReduxEffector<State, Effect>): ReduxStore<State, Action, Effect> =
-    BuilderSideEffects(this, viewState, block).build()
-
-interface BasePresenterRedux<
+abstract class BasePresenterRedux<
         State : ReduxState,
         Action : ReduxAction,
         Effect : ReduxSideEffect,
         View : BaseViewRedux<State>
-        > : AnkoLogger {
+        > : BasePresenter<View>() {
 
     protected abstract val redux: ReduxStore<State, Action, Effect>
 
@@ -39,40 +30,23 @@ interface BasePresenterRedux<
         BuilderReducer(this@withActions, reducer)
 
     protected fun BuilderReducer<State, Action>.withSideEffects(block: ReduxEffector<State, Effect>): ReduxStore<State, Action, Effect> =
-        BuilderSideEffects(this, viewState, block).build()
+        BuilderSideEffects(this, view, block).build()
 
     fun fire(vararg action: Action) {
-        debug { "fire(${action.joinToString("; ")})" }
+        logDebug { "fire(${action.joinToString("; ")})" }
         redux.dispatch(*action)
     }
 
     infix fun fire(action: Action) {
-        debug { "fire($action)" }
+        logDebug { "fire($action)" }
         redux.dispatch(action)
     }
 
     infix fun fire(effect: Effect) {
-        debug { "fireEffect($effect)" }
+        logDebug { "fireEffect($effect)" }
         redux.dispatchSideEffect(effect)
     }
 }
-
-private class DispatcherUi<State : ReduxState>(val view: BaseViewRedux<State>) :
-    Dispatcher<State>(), AnkoLogger {
-
-    var isFirstDispatch = true
-
-    override fun dispatch(prevState: State, state: State) {
-        checkIsMainThread()
-        if (state != prevState || isFirstDispatch) {
-            isFirstDispatch = false
-            view.setUiState(state.asUiStateShowContent())
-        } else {
-            debug { "skip dispatch($prevState, $state)" }
-        }
-    }
-}
-
 
 open class BuilderState<State : ReduxState>(protected val state: () -> State) {
     constructor(state: BuilderState<State>) : this(state.state)
@@ -100,4 +74,20 @@ class BuilderSideEffects<State : ReduxState, Action : ReduxAction, Effect : Redu
         reducer = reducer,
         sideEffect = sideEffects
     )
-}*/
+}
+
+private class DispatcherUi<State : ReduxState>(val view: BaseViewRedux<State>) :
+    Dispatcher<State>(),
+    AnkoLogger {
+
+    val isFirstDispatch = atomic(true)
+
+    override fun dispatch(prevState: State, newState: State) {
+        if (newState != prevState || isFirstDispatch.value) {
+            isFirstDispatch.value = false
+            view.setUiState(newState.asUiStateShowContent())
+        } else {
+            logDebug { "skip dispatch(${prevState.toLogString()}, ${newState.toLogString()})" }
+        }
+    }
+}

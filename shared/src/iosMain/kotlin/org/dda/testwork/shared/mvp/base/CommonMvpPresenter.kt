@@ -1,15 +1,9 @@
-package org.dda.testwork.shared.mvp
+package org.dda.testwork.shared.mvp.base
 
-import org.dda.testwork.shared.coroutine_context.ExecutionProgress
-
-
-actual interface CommonMvpView {
-    actual fun showProgress(show: Boolean, progress: ExecutionProgress)
-}
 
 actual abstract class CommonMvpPresenter<View : CommonMvpView> {
 
-    protected actual val viewState: View
+    protected actual val view: View
         get() = TODO("Not yet implemented")
 
     actual open fun attachView(view: View) {}

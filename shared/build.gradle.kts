@@ -6,7 +6,9 @@ plugins {
 }
 
 kotlin {
+
     android()
+
     ios {
         binaries {
             framework {
@@ -14,6 +16,8 @@ kotlin {
             }
         }
     }
+
+
     sourceSets {
 
         val coroutinesVersion = "1.4.2-native-mt"
@@ -33,6 +37,9 @@ kotlin {
                 //  DI
                 implementation("org.kodein.di:kodein-di:7.2.0")
 
+                //  atomic operations
+                implementation("org.jetbrains.kotlinx:atomicfu:0.15.0")
+
             }
         }
         val commonTest by getting {
@@ -45,7 +52,9 @@ kotlin {
             dependencies {
                 //implementation("com.google.android.material:material:1.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-                implementation("com.github.moxy-community:moxy:2.2.1")
+
+                val moxyVersion = "2.2.1"
+                implementation("com.github.moxy-community:moxy:$moxyVersion")
             }
         }
         val androidTest by getting {
@@ -77,6 +86,11 @@ android {
 
         buildConfigField("String", "LOGGING_TAG", "\"TEST_APP\"")
 
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 

@@ -1,4 +1,4 @@
-package org.dda.testwork.shared.mvp
+package org.dda.testwork.shared.mvp.base
 
 import kotlinx.coroutines.CancellationException
 import org.dda.ankoLogger.logDebug

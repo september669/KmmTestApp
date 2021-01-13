@@ -1,20 +1,11 @@
-package org.dda.testwork.shared.mvp
+package org.dda.testwork.shared.mvp.base
 
 import moxy.MvpPresenter
-import moxy.MvpView
-import org.dda.testwork.shared.coroutine_context.ExecutionProgress
-
-
-actual interface CommonMvpView : MvpView {
-
-    actual fun showProgress(show: Boolean, progress: ExecutionProgress)
-
-}
 
 
 actual abstract class CommonMvpPresenter<View : CommonMvpView> : MvpPresenter<View>() {
 
-    protected actual val viewState: View get() = super.getViewState()
+    protected actual val view: View get() = super.getViewState()
 
     actual override fun attachView(view: View) = super.attachView(view)
 

@@ -1,17 +1,9 @@
-package org.dda.testwork.shared.mvp
+package org.dda.testwork.shared.mvp.base
 
-import org.dda.testwork.shared.coroutine_context.ExecutionProgress
-
-
-expect interface CommonMvpView {
-
-    fun showProgress(show: Boolean, progress: ExecutionProgress)
-
-}
 
 expect abstract class CommonMvpPresenter<View : CommonMvpView>() {
 
-    protected val viewState: View
+    protected val view: View
 
     open fun attachView(view: View)
 

@@ -1,4 +1,4 @@
-package org.dda.testwork.shared.mvp
+package org.dda.testwork.shared.mvp.base
 
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +22,7 @@ abstract class BasePresenter<View : CommonMvpView> : CommonMvpPresenter<View>(),
     final override val scopeJob = CoroutineExecutionContext.SupervisorScopeJob()
     final override val coroutineContext = Dispatchers.Main + scopeJob
 
-    final override val baseView: View = viewState
+    final override val baseView: View = view
 
     override fun attachView(view: View) {
         logDebug { "attachView()" }

@@ -10,23 +10,31 @@ class ReduxStore<State : ReduxState, Action : ReduxAction, SideEffect : ReduxSid
     val sideEffect: ReduxEffector<State, SideEffect>
 ) : AnkoLogger {
 
+    protected val isBulkDispatching = true
+
     private var _state: State = initState
 
     val state: State get() = _state
 
     init {
-        dispatcher.dispatch(prevState = state, state = _state)
+        dispatcher.dispatch(prevState = state, newState = state)
     }
 
     fun dispatch(vararg action: Action): State {
         logDebug { "dispatch($action)" }
         var newSate: State? = null
+        val oldState = _state
         action.forEach { actionItem ->
             reducer.invoke(newSate ?: _state, actionItem).apply {
-                dispatcher.dispatch(state, this)
+                if (!isBulkDispatching) {
+                    dispatcher.dispatch(state, this)
+                }
                 _state = this
                 newSate = this
             }
+        }
+        if (isBulkDispatching) {
+            dispatcher.dispatch(oldState, newSate ?: _state)
         }
 
         return newSate ?: _state
@@ -39,7 +47,7 @@ class ReduxStore<State : ReduxState, Action : ReduxAction, SideEffect : ReduxSid
 }
 
 abstract class Dispatcher<State : ReduxState> {
-    abstract fun dispatch(prevState: State, state: State)
+    abstract fun dispatch(prevState: State, newState: State)
 }
 
 fun ReduxState.illegalState(action: ReduxAction) =
@@ -50,7 +58,9 @@ fun ReduxState.illegalState(effect: ReduxSideEffect) =
 
 fun ReduxState.illegalState(message: String) = IllegalStateException("$message when state: $this")
 
-interface ReduxState : AnkoLogger
+interface ReduxState : AnkoLogger {
+    fun toLogString(): String = toString()
+}
 
 interface ReduxAction : AnkoLogger
 
