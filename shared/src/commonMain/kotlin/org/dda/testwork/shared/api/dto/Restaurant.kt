@@ -1,4 +1,4 @@
-package org.dda.testwork.shared.network.dto
+package org.dda.testwork.shared.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

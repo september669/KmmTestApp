@@ -44,7 +44,6 @@ kotlin {
 
                 //  DI
                 implementation("org.kodein.di:kodein-di:${Deps.Version.kodein}")
-
             }
         }
         val commonTest by getting {

@@ -25,6 +25,11 @@ dependencies {
 
     implementation("com.kirich1409.viewbindingpropertydelegate:vbpd-noreflection:1.4.1")
 
+
+    implementation("com.xwray:groupie:${Deps.Version.groupie}")
+    implementation("com.xwray:groupie-viewbinding:${Deps.Version.groupie}")
+
+
 }
 
 android {

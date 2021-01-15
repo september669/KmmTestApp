@@ -1,4 +1,4 @@
-package org.dda.testwork.shared.network
+package org.dda.testwork.shared.api
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*

@@ -1,16 +1,18 @@
-package org.dda.testwork.shared.network
+package org.dda.testwork.shared.api
 
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import org.dda.testwork.shared.network.dto.RestaurantItem
+import org.dda.testwork.shared.api.dto.RestaurantItem
 
-class ChibbisService(val baseUrl: Url, val client: HttpClient) {
+class ChibbisService(
+    private val baseUrl: Url,
+    private val client: HttpClient
+) {
 
     suspend fun getRestaurantList(): List<RestaurantItem> {
         return client.get(baseUrl.add("restaurants"))
     }
-
 
 
 }

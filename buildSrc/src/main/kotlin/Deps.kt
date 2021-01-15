@@ -12,5 +12,8 @@ object Deps {
         const val kodein = "7.2.0"
 
         const val moxyMvp = "2.2.1"
+
+
+        const val groupie = "2.8.1"
     }
 }
