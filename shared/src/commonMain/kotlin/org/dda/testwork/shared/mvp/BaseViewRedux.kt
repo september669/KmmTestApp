@@ -20,7 +20,6 @@ interface BaseViewRedux<State : ReduxState> : CommonMvpView {
 
 }
 
-
 fun <C : Any> C.asUiStateShowContent() = ViewState.ShowContent(this)
 fun ErrorKind.asUiState() = ViewState.ShowError(this)
 

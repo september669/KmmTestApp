@@ -3,4 +3,11 @@
 
     <string name="spash_screen_text">Hello!\nI\'m splash!!</string>
 
+    <string name="layout_error_message">Что то пошло не так :(</string>
+
+    <string name="search">Поиск</string>
+    <string name="main_menu_restaurant_list">Рестораны</string>
+    <string name="main_menu_hits">Хиты</string>
+    <string name="main_menu_reviews">Отзывы</string>
+
 </resources>

@@ -13,4 +13,30 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+
+    <style name="RobotoRegular">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RobotoRegular.GreyishBrown" parent="RobotoRegular">
+        <item name="android:textColor">@color/colorGreyishBrown</item>
+    </style>
+
+    <style name="RobotoRegular.WarmGrey" parent="RobotoRegular">
+        <item name="android:textColor">@color/colorWarmGrey</item>
+    </style>
+
+    <style name="RobotoRegular.GreyishBrown.12" parent="RobotoRegular.GreyishBrown">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">5sp</item>
+    </style>
+
+    <style name="RobotoRegular.WarmGrey.12" parent="RobotoRegular.WarmGrey">
+        <item name="android:textSize">11sp</item>
+        <item name="android:lineSpacingExtra">5sp</item>
+    </style>
+
+
 </resources>
