@@ -18,7 +18,7 @@ class ActivitySplashScreen : AppCompatActivity(), AnkoLogger {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME
         }
         GlobalScope.launch {
-            delay(1500)
+            delay(1000)
             startActivity(intent)
             finish()
         }

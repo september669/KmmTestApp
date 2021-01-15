@@ -17,6 +17,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
 
             >
 
@@ -34,24 +36,6 @@
 
                 />
 
-            <EditText
-                android:id="@+id/search_input"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="6dp"
-                android:background="@color/colorTransparent"
-                android:hint="@string/search"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textSize="16dp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toBottomOf="@id/search_input_back"
-                app:layout_constraintEnd_toEndOf="@id/search_input_back"
-                app:layout_constraintStart_toEndOf="@id/search_lens"
-                app:layout_constraintTop_toTopOf="@id/search_input_back"
-
-                />
-
             <ImageView
                 android:id="@+id/search_lens"
                 android:layout_width="28dp"
@@ -60,6 +44,25 @@
                 android:src="@drawable/ic_search_lens"
                 app:layout_constraintBottom_toBottomOf="@id/search_input_back"
                 app:layout_constraintStart_toStartOf="@id/search_input_back"
+                app:layout_constraintTop_toTopOf="@id/search_input_back"
+
+                />
+
+            <EditText
+                android:id="@+id/search_input"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@color/colorTransparent"
+                android:hint="@string/search"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toBottomOf="@id/search_input_back"
+                app:layout_constraintEnd_toEndOf="@id/search_input_back"
+                app:layout_constraintStart_toEndOf="@id/search_lens"
                 app:layout_constraintTop_toTopOf="@id/search_input_back"
 
                 />

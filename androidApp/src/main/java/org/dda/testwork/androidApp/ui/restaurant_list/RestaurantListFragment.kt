@@ -10,6 +10,9 @@ import org.dda.testwork.androidApp.ui.base.BaseFragmentRefreshable
 import org.dda.testwork.shared.mvp.redux.ReduxState
 
 class RestaurantListFragment : BaseFragmentRefreshable<RestaurantListState>(R.layout.fragment_restaurant_list) {
+    companion object{
+        const val screenKey = "RestaurantListFragment"
+    }
 
 
 
