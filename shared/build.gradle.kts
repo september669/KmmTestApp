@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    kotlin("plugin.serialization") version Deps.Version.kotlin
 }
 
 kotlin {
@@ -20,25 +21,29 @@ kotlin {
 
     sourceSets {
 
-        val coroutinesVersion = "1.4.2-native-mt"
-
         val commonMain by getting {
             dependencies {
 
                 //  coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.Version.coroutinesNative}")
+
+                //  atomic operations
+                implementation("org.jetbrains.kotlinx:atomicfu:${Deps.Version.kotlinxAtomicfu}")
 
                 //  logging
                 api("org.dda.ankoLogger:AnkoLogger:0.2.1")
 
                 //  http client
-                implementation("io.ktor:ktor-client-core:1.5.0")
+                api("io.ktor:ktor-client-core:${Deps.Version.ktor}")
+                implementation("io.ktor:ktor-client-cio:${Deps.Version.ktor}")
+                implementation("io.ktor:ktor-client-serialization:${Deps.Version.ktor}")
+
+                //  Kotlin multiplatform / multi-format reflectionless serialization
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${Deps.Version.kotlinSerialization}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Deps.Version.kotlinSerialization}")
 
                 //  DI
-                implementation("org.kodein.di:kodein-di:7.2.0")
-
-                //  atomic operations
-                implementation("org.jetbrains.kotlinx:atomicfu:0.15.0")
+                implementation("org.kodein.di:kodein-di:${Deps.Version.kodein}")
 
             }
         }
@@ -51,10 +56,12 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 //implementation("com.google.android.material:material:1.2.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-                val moxyVersion = "2.2.1"
-                implementation("com.github.moxy-community:moxy:$moxyVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Deps.Version.coroutinesNative}")
+
+                implementation("io.ktor:ktor-client-android:${Deps.Version.ktor}")
+
+                implementation("com.github.moxy-community:moxy:${Deps.Version.moxyMvp}")
             }
         }
         val androidTest by getting {
@@ -85,6 +92,8 @@ android {
         multiDexEnabled = true
 
         buildConfigField("String", "LOGGING_TAG", "\"TEST_APP\"")
+
+        buildConfigField("String", "API_URL", "\"https://front-task.chibbistest.ru/api/v1\"")
 
     }
 

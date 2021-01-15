@@ -5,15 +5,18 @@ plugins {
 }
 
 dependencies {
+
     implementation(project(":shared"))
     implementation("com.google.android.material:material:1.2.1")
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.multidex:multidex:2.0.1")
 
-    val moxyVersion = "2.2.1"
-    implementation("com.github.moxy-community:moxy:$moxyVersion")
-    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Deps.Version.coroutinesNative}")
+
+    implementation("com.github.moxy-community:moxy:${Deps.Version.moxyMvp}")
+    implementation("com.github.moxy-community:moxy-androidx:${Deps.Version.moxyMvp}")
+    kapt("com.github.moxy-community:moxy-compiler:${Deps.Version.moxyMvp}")
 }
 
 android {
