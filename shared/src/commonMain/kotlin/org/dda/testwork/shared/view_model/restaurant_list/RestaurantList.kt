@@ -8,7 +8,7 @@ import org.dda.testwork.shared.utils.checkWhen
 import org.dda.testwork.shared.view_model.restaurant_list.RestaurantList.*
 
 
-class RestaurantListPresenter(
+class RestaurantListViewModel(
     private val repoRestaurants: RepoRestaurants
 ) : BaseReduxViewModel<RestaurantListState, Action, Effect>() {
 
@@ -27,7 +27,7 @@ class RestaurantListPresenter(
 
 
     private fun doOnApplyFilter(state: RestaurantListState) = launchUiProgress {
-        logDebug { "doOnApplyFilter(${state.query})" }
+        logDebug { "doOnApplyFilter(${state.toLogString()})" }
         val list = repoRestaurants.findRestaurantList(state.query)
         fire(
             Action.UpdateRestaurantList(
@@ -38,28 +38,34 @@ class RestaurantListPresenter(
     }
 }
 
-interface RestaurantList{
+interface RestaurantList {
     sealed class RestaurantListState(
         open val query: String
     ) : ReduxState {
 
         data class PreRequest(override val query: String) : RestaurantListState(query)
 
-        data class Loaded(override val query: String, val list: List<RestaurantItem>) : RestaurantListState(query)
+        data class Loaded(
+            override val query: String,
+            val list: List<RestaurantItem>,
+            val isNeedScrollToTop: Boolean = false
+        ) : RestaurantListState(query)
 
     }
 
     sealed class Action : ReduxAction {
-        abstract fun reduce(state: RestaurantListState, presenter: RestaurantListPresenter): RestaurantListState
+        abstract fun reduce(state: RestaurantListState, viewModel: RestaurantListViewModel): RestaurantListState
 
         data class UpdateQuery(val query: String) : Action() {
 
-            override fun reduce(state: RestaurantListState, presenter: RestaurantListPresenter): RestaurantListState {
+            override fun reduce(state: RestaurantListState, viewModel: RestaurantListViewModel): RestaurantListState {
                 return when (state) {
                     is RestaurantListState.PreRequest -> state.copy(query = query)
-                    is RestaurantListState.Loaded -> RestaurantListState.PreRequest(query = query)
+                    is RestaurantListState.Loaded -> state.copy(query = query)
                 }.also {
-                    presenter fire Effect.ApplyFilter
+                    viewModel.launchUi {
+                        viewModel fire Effect.ApplyFilter
+                    }
                 }
             }
 
@@ -67,10 +73,20 @@ interface RestaurantList{
 
         data class UpdateRestaurantList(val query: String, val list: List<RestaurantItem>) : Action() {
 
-            override fun reduce(state: RestaurantListState, presenter: RestaurantListPresenter): RestaurantListState {
+            override fun reduce(state: RestaurantListState, viewModel: RestaurantListViewModel): RestaurantListState {
                 return when (state) {
-                    is RestaurantListState.PreRequest -> RestaurantListState.Loaded(query = query, list = list)
-                    is RestaurantListState.Loaded -> state.copy(query = query, list = list)
+                    is RestaurantListState.PreRequest -> RestaurantListState.Loaded(query = query, list = list, isNeedScrollToTop = true)
+                    is RestaurantListState.Loaded -> state.copy(query = query, list = list, isNeedScrollToTop = true)
+                }
+            }
+
+        }
+
+        object DisableScrollToTop : Action() {
+            override fun reduce(state: RestaurantListState, viewModel: RestaurantListViewModel): RestaurantListState {
+                return when (state) {
+                    is RestaurantListState.PreRequest -> state
+                    is RestaurantListState.Loaded -> state.copy(isNeedScrollToTop = false)
                 }
             }
 

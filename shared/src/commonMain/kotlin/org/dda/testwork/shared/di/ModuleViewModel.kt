@@ -1,7 +1,7 @@
 package org.dda.testwork.shared.di
 
 import org.dda.ankoLogger.logDebug
-import org.dda.testwork.shared.view_model.restaurant_list.RestaurantListPresenter
+import org.dda.testwork.shared.view_model.restaurant_list.RestaurantListViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -14,9 +14,9 @@ val moduleViewModel = DI.Module(name = moduleViewModelName) {
 
     importOnce(moduleRepo)
 
-    bind<RestaurantListPresenter>() with provider {
+    bind<RestaurantListViewModel>() with provider {
         diLogger.logDebug("bind<RestaurantListPresenter>()")
-        RestaurantListPresenter(instance())
+        RestaurantListViewModel(instance())
     }
 
 

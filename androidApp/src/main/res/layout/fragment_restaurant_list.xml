@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
 
     >
 
@@ -12,6 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorTransparent"
 
+
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +22,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            app:layout_scrollFlags="scroll|snap"
 
             >
 
@@ -61,22 +65,36 @@
                 android:textSize="16sp"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="@id/searchInputBack"
-                app:layout_constraintEnd_toEndOf="@id/searchInputBack"
+                app:layout_constraintEnd_toStartOf="@id/searchClear"
                 app:layout_constraintStart_toEndOf="@id/searchLens"
                 app:layout_constraintTop_toTopOf="@id/searchInputBack"
 
                 />
 
+            <Button
+                android:id="@+id/searchClear"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/button_cancel_search"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/searchInputBack"
+                app:layout_constraintEnd_toEndOf="@id/searchInputBack"
+                app:layout_constraintTop_toTopOf="@id/searchInputBack"
+                tools:visibility="visible"
+
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/productCardRecycler"
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
         />
 

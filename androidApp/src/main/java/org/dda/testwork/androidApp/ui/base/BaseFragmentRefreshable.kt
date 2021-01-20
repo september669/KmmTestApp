@@ -58,6 +58,9 @@ abstract class BaseFragmentRefreshable<
     }
 
     protected abstract fun renderContent(content: State)
+    protected abstract fun onRetryButtonClicked()
+    protected abstract fun onRefresh()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,11 +77,17 @@ abstract class BaseFragmentRefreshable<
     ): View? {
         logDebug("onCreateView()")
         return BaseFragmentRefreshableBinding.inflate(inflater, container, false).also { rootBind ->
+
             val contentView = inflater.inflate(layoutId, rootBind.containerLayout, true).let {
                 (it as ViewGroup).children.first()
             }
             _bindingRefreshable = rootBind
             _bindingContent = bindView(contentView)
+
+            rootBind.refreshLayout.setOnRefreshListener {
+                onRefresh()
+            }
+
         }.root
     }
 
