@@ -1,6 +1,7 @@
 package org.dda.testwork.shared.di
 
 import org.dda.ankoLogger.logDebug
+import org.dda.testwork.shared.view_model.main_screen.MainScreenViewModel
 import org.dda.testwork.shared.view_model.restaurant_list.RestaurantListViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
@@ -14,10 +15,14 @@ val moduleViewModel = DI.Module(name = moduleViewModelName) {
 
     importOnce(moduleRepo)
 
+    bind<MainScreenViewModel>() with provider {
+        diLogger.logDebug("bind<MainScreen>()")
+        MainScreenViewModel()
+    }
+
     bind<RestaurantListViewModel>() with provider {
         diLogger.logDebug("bind<RestaurantListPresenter>()")
         RestaurantListViewModel(instance())
     }
-
 
 }

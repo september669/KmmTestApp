@@ -23,6 +23,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             app:layout_scrollFlags="scroll|snap"
+            android:animateLayoutChanges="true"
 
             >
 
