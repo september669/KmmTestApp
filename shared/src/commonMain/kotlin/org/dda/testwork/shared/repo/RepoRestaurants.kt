@@ -1,6 +1,7 @@
 package org.dda.testwork.shared.repo
 
 import org.dda.ankoLogger.AnkoLogger
+import org.dda.ankoLogger.logDebug
 import org.dda.testwork.shared.api.ChibbisService
 import org.dda.testwork.shared.api.dto.RestaurantItem
 import org.dda.testwork.shared.utils.isNotNullOrEmptyOrBlank
@@ -10,6 +11,7 @@ class RepoRestaurants(
 ) : AnkoLogger {
 
     suspend fun findRestaurantList(filter: String): List<RestaurantItem> {
+        logDebug { "findRestaurantList($filter)" }
         val list = service.getRestaurantList()
         return if (filter.isNotNullOrEmptyOrBlank()) {
             list.filter { restaurantItem ->

@@ -3,6 +3,7 @@ package org.dda.testwork.shared.api
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import org.dda.testwork.shared.api.dto.Dish
 import org.dda.testwork.shared.api.dto.RestaurantItem
 
 class ChibbisService(
@@ -11,13 +12,18 @@ class ChibbisService(
 ) {
 
     suspend fun getRestaurantList(): List<RestaurantItem> {
-        return client.get(baseUrl.add("restaurants"))
+        return client.get(baseUrl + "restaurants")
+    }
+
+    suspend fun getDishHits(): List<Dish> {
+        return client.get(baseUrl + "hits")
     }
 
 
 }
 
-private inline fun Url.add(path: String): Url {
+
+private inline operator fun Url.plus(path: String): Url {
     return URLBuilder(this).pathPart(listOf(path)).build()
 }
 

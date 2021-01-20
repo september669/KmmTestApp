@@ -30,7 +30,7 @@ import org.kodein.di.instance
 class RestaurantListFragment :
     BaseFragmentRefreshable<
             FragmentRestaurantListBinding,
-            RestaurantListState,
+            State,
             Action,
             Effect,
             RestaurantListViewModel
@@ -90,16 +90,16 @@ class RestaurantListFragment :
         viewModel fire Action.UpdateQuery(binding.searchInput.text.toString())
     }
 
-    override fun renderContent(content: RestaurantListState) {
+    override fun renderContent(content: State) {
         logError { "renderContent($content)" }
 
         binding.searchInput.setTextIfDiffer(content.query)
 
         when (content) {
-            is RestaurantListState.PreRequest -> {
+            is State.PreRequest -> {
                 groupRestaurantItem.update(emptyList())
             }
-            is RestaurantListState.Loaded -> {
+            is State.Loaded -> {
                 groupRestaurantItem.update(
                     content.list.map { restaurantItem ->
                         ItemRestaurant(
