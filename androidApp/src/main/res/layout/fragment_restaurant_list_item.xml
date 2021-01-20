@@ -22,4 +22,57 @@
 
         />
 
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edge_margin"
+        android:textAppearance="@style/RobotoRegular.WarmGrey.18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/logo"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Restaurant Name"
+
+        />
+
+
+    <TextView
+        android:id="@+id/specializations"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textAppearance="@style/RobotoRegular.WarmGrey.18"
+        app:layout_constraintEnd_toEndOf="@id/name"
+        app:layout_constraintStart_toStartOf="@id/name"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        tools:text="Restaurant specializations"
+
+        />
+
+    <ImageView
+        android:id="@+id/likeIcon"
+        android:layout_width="18sp"
+        android:layout_height="18sp"
+        android:src="@drawable/ic_thumb_up"
+        app:layout_constraintBottom_toBottomOf="@id/likeText"
+        app:layout_constraintStart_toStartOf="@id/name"
+        app:layout_constraintTop_toTopOf="@id/likeText"
+
+        />
+
+    <TextView
+        android:id="@+id/likeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:textAppearance="@style/RobotoRegular.WarmGrey.18"
+        app:layout_constraintEnd_toEndOf="@id/specializations"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/likeIcon"
+        app:layout_constraintTop_toBottomOf="@id/specializations"
+        tools:text="42%"
+
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

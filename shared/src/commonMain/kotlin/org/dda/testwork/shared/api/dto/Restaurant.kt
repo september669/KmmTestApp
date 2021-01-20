@@ -1,9 +1,8 @@
 package org.dda.testwork.shared.api.dto
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
-//class Restaurants : ArrayList<RestaurantsItem>()
 
 @Serializable
 data class RestaurantItem(
@@ -25,6 +24,14 @@ data class RestaurantItem(
     val specializations: List<Specialization>
 ) {
     val id: String get() = name
+
+    val likeFactor: Float by lazy {
+        if (reviewsCount > 0 && positiveReviews >= 0 && positiveReviews <= reviewsCount) {
+            positiveReviews / reviewsCount.toFloat()
+        } else {
+            -1f
+        }
+    }
 }
 
 @Serializable

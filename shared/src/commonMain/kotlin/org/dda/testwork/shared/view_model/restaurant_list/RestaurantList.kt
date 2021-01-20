@@ -1,8 +1,10 @@
 package org.dda.testwork.shared.view_model.restaurant_list
 
+import org.dda.ankoLogger.logDebug
 import org.dda.testwork.shared.api.dto.RestaurantItem
 import org.dda.testwork.shared.redux.*
 import org.dda.testwork.shared.repo.RepoRestaurants
+import org.dda.testwork.shared.utils.checkWhen
 import org.dda.testwork.shared.view_model.restaurant_list.RestaurantList.*
 
 

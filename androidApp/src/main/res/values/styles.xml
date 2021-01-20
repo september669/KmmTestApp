@@ -38,5 +38,10 @@
         <item name="android:lineSpacingExtra">5sp</item>
     </style>
 
+    <style name="RobotoRegular.WarmGrey.18" parent="RobotoRegular.WarmGrey">
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">5sp</item>
+    </style>
+
 
 </resources>
