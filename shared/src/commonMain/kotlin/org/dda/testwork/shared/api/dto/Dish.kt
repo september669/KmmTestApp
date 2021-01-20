@@ -20,4 +20,10 @@ data class Dish(
     val restaurantLogo: String,
     @SerialName("RestaurantName")
     val restaurantName: String
-)
+) {
+    val id: String by lazy {
+        restaurantId.toString() +
+                productName +
+                productPrice
+    }
+}

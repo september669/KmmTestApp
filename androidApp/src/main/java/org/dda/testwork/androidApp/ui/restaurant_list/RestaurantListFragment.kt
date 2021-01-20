@@ -3,10 +3,8 @@ package org.dda.testwork.androidApp.ui.restaurant_list
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.Section
-import dev.icerock.moko.mvvm.createViewModelFactory
 import kotlinx.coroutines.delay
 import org.dda.ankoLogger.logDebug
 import org.dda.ankoLogger.logError
@@ -21,10 +19,6 @@ import org.dda.testwork.shared.utils.checkWhen
 import org.dda.testwork.shared.utils.isNotNullOrEmptyOrBlank
 import org.dda.testwork.shared.view_model.restaurant_list.RestaurantList.*
 import org.dda.testwork.shared.view_model.restaurant_list.RestaurantListViewModel
-import org.kodein.di.DIAware
-import org.kodein.di.android.x.closestDI
-import org.kodein.di.direct
-import org.kodein.di.instance
 
 
 class RestaurantListFragment :
@@ -34,24 +28,13 @@ class RestaurantListFragment :
             Action,
             Effect,
             RestaurantListViewModel
-            >(R.layout.fragment_restaurant_list),
-    DIAware {
+            >(R.layout.fragment_restaurant_list) {
 
     companion object {
         const val screenKey = "RestaurantListFragment"
     }
 
-    override val di by closestDI()
-
-    override val viewModelClass = RestaurantListViewModel::class.java
-
-    override fun viewModelFactory(): ViewModelProvider.Factory {
-        return createViewModelFactory {
-            direct.instance<RestaurantListViewModel>().also { vm ->
-                vm fire Action.UpdateQuery("")
-            }
-        }
-    }
+    override fun makeViewModelBluePrint() = viewModelBluePrint<RestaurantListViewModel>()
 
     private val groupRestaurantItem = Section()
 

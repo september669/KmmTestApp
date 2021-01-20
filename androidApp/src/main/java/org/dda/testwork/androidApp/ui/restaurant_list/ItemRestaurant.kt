@@ -40,8 +40,6 @@ class ItemRestaurant(
 
     }
 
-    override fun initializeViewBinding(view: View): FragmentRestaurantListItemBinding {
-        return FragmentRestaurantListItemBinding.bind(view)
-    }
+    override fun initializeViewBinding(view: View): FragmentRestaurantListItemBinding = FragmentRestaurantListItemBinding.bind(view)
 
 }

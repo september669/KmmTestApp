@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.logDebug
 import org.dda.ankoLogger.logError
+import org.dda.ankoLogger.logWarn
 import org.dda.testwork.shared.coroutine_context.CoroutineExecutionContext
 import org.dda.testwork.shared.coroutine_context.ExecutionProgress
 import org.dda.testwork.shared.coroutine_context.coroutineDispatchers
@@ -149,7 +150,7 @@ abstract class BaseReduxViewModel<
                 isFirstDispatch.value = false
                 sendState(newState)
             } else {
-                logDebug { "skip dispatch(${prevState.toLogString()}, ${newState.toLogString()})" }
+                logWarn { "skip dispatch(${prevState.toLogString()}, ${newState.toLogString()})" }
             }
         }
     }

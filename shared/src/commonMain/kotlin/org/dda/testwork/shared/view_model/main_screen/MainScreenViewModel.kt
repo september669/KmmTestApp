@@ -7,9 +7,9 @@ import org.dda.testwork.shared.view_model.main_screen.MainState.*
 class MainScreenViewModel : BaseReduxViewModel<State, Action, Effect>() {
 
     override val redux = initState {
-        State.RestaurantList
+        State(Screen.RestaurantList)
     }.withActions { prevState, action ->
-        prevState
+        action.reduce(prevState, this)
     }.withSideEffects { state, effect ->
 
     }
@@ -20,16 +20,23 @@ class MainScreenViewModel : BaseReduxViewModel<State, Action, Effect>() {
 }
 
 interface MainState {
-    sealed class State : ReduxState {
-        object RestaurantList : State()
 
-        override fun toLogString(): String {
-            return when (this) {
-                RestaurantList -> this::class.simpleName!!
+    data class State(
+        val screen: Screen
+    ) : ReduxState
+
+
+    sealed class Action : ReduceAction<State, MainScreenViewModel> {
+        data class ChangeScreen(val screen: Screen) : Action() {
+            override fun reduce(state: State, viewModel: MainScreenViewModel): State {
+                return state.copy(screen = screen)
             }
         }
     }
 
-    class Action : ReduxAction
     class Effect : ReduxSideEffect
+
+    enum class Screen {
+        RestaurantList, DishHitList
+    }
 }

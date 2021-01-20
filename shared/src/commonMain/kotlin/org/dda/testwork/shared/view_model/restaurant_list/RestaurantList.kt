@@ -13,7 +13,11 @@ class RestaurantListViewModel(
 ) : BaseReduxViewModel<State, Action, Effect>() {
 
     override val redux = initState {
-        State.PreRequest("")
+        State.PreRequest("").also {
+            launchUi {
+                fire(Action.UpdateQuery(""))
+            }
+        }
     }.withActions { prevState, action ->
         action.reduce(prevState, this)
     }.withSideEffects { state, effect ->

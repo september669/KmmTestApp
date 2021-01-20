@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import dev.icerock.moko.mvvm.createViewModelFactory
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.Dispatchers
 import org.dda.ankoLogger.logDebug
@@ -18,6 +19,11 @@ import org.dda.testwork.shared.coroutine_context.CoroutineExecutionContext
 import org.dda.testwork.shared.coroutine_context.ExecutionProgress
 import org.dda.testwork.shared.coroutine_context.coroutineDispatchers
 import org.dda.testwork.shared.redux.ReduxState
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.direct
+import org.kodein.di.instance
+import kotlin.reflect.KClass
 
 
 abstract class BaseFragment<
@@ -26,9 +32,11 @@ abstract class BaseFragment<
         VM : ViewModel
         >(@LayoutRes val layoutId: Int) : Fragment(),
     CoroutineExecutionContext,
+    DIAware,
     AndroidContextHolder {
 
-    abstract override fun showProgress(show: Boolean, progress: ExecutionProgress)
+
+    override val di by closestDI()
 
     @Volatile
     override var isDestroyedContext = false
@@ -45,12 +53,11 @@ abstract class BaseFragment<
 
     protected lateinit var viewModel: VM
 
-    protected abstract val viewModelClass: Class<VM>
-
-    protected abstract fun viewModelFactory(): ViewModelProvider.Factory
-
     protected abstract fun bindView(view: View): VB
 
+    protected abstract fun makeViewModelBluePrint(): ViewModelBluePrint<VM>
+
+    abstract override fun showProgress(show: Boolean, progress: ExecutionProgress)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,7 +66,8 @@ abstract class BaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory()).get(viewModelClass)
+        val (clazz, factory) = makeViewModelBluePrint()
+        viewModel = ViewModelProvider(this, factory).get(clazz.java)
         logError { "ViewModelProvider return: $viewModel" }
     }
 
@@ -121,4 +129,19 @@ abstract class BaseFragment<
         super.onDestroy()
     }
 
+    data class ViewModelBluePrint<VM : ViewModel>(
+        val viewModelClass: KClass<VM>,
+        val factory: ViewModelProvider.Factory
+    )
+
+    protected inline fun <reified VM : ViewModel> viewModelBluePrint(): ViewModelBluePrint<VM> {
+        return ViewModelBluePrint(
+            viewModelClass = VM::class,
+            factory = createViewModelFactory {
+                di.direct.instance<VM>()
+            }
+        )
+    }
+
 }
+

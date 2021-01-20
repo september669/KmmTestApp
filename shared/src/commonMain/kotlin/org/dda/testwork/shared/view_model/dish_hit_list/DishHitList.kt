@@ -16,7 +16,11 @@ class DishHitListViewModel(
         get() = TODO("Not yet implemented")
 
     override val redux = initState {
-        State.Init
+        State.Init.also {
+            launchUi {
+                fire(Effect.OnRefresh)
+            }
+        }
     }.withActions { prevState, action ->
         action.reduce(prevState, this)
     }.withSideEffects { state, effect ->

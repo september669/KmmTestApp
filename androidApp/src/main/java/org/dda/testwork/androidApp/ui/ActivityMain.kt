@@ -8,12 +8,17 @@ import androidx.lifecycle.ViewModelProvider
 import dev.icerock.moko.mvvm.createViewModelFactory
 import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.logDebug
+import org.dda.ankoLogger.logError
 import org.dda.testwork.androidApp.R
+import org.dda.testwork.androidApp.databinding.ActivityMainBinding
+import org.dda.testwork.androidApp.ui.dish_hit_list.DishHitListFragment
 import org.dda.testwork.androidApp.ui.restaurant_list.RestaurantListFragment
 import org.dda.testwork.shared.redux.VMEvents
 import org.dda.testwork.shared.utils.checkWhen
 import org.dda.testwork.shared.view_model.main_screen.MainScreenViewModel
 import org.dda.testwork.shared.view_model.main_screen.MainState
+import org.dda.testwork.shared.view_model.main_screen.MainState.Action
+import org.dda.testwork.shared.view_model.main_screen.MainState.Screen
 import org.kodein.di.DIAware
 import org.kodein.di.android.closestDI
 import org.kodein.di.direct
@@ -28,10 +33,15 @@ class ActivityMain : AppCompatActivity(), DIAware, AnkoLogger {
 
     lateinit var viewModel: MainScreenViewModel
 
+    private lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         logDebug { "onCreate()" }
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         viewModel = ViewModelProvider(this,
             createViewModelFactory {
@@ -45,14 +55,38 @@ class ActivityMain : AppCompatActivity(), DIAware, AnkoLogger {
                 is VMEvents.ViewState.ShowError -> TODO()
             }.checkWhen()
         }
+
+
+        binding.activityMainNavigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.mainMenuPageRestaurantList -> {
+                    viewModel fire Action.ChangeScreen(Screen.RestaurantList)
+                }
+                R.id.mainMenuPageDishHitList -> {
+                    viewModel fire Action.ChangeScreen(Screen.DishHitList)
+                }
+                else -> {
+                    logError("Unknown menuItem: ${menuItem.title}")
+                    viewModel fire Action.ChangeScreen(Screen.RestaurantList)
+                }
+            }
+            true
+        }
     }
+
 
     private fun renderContent(content: MainState.State) {
         logDebug { "renderContent($content)" }
-        when (content) {
-            MainState.State.RestaurantList -> {
+        when (content.screen) {
+            Screen.RestaurantList -> {
                 if (supportFragmentManager.lastBackStackEntry?.name != RestaurantListFragment.screenKey) {
                     fragmentReplace(RestaurantListFragment(), RestaurantListFragment.screenKey)
+                }
+                Unit
+            }
+            Screen.DishHitList -> {
+                if (supportFragmentManager.lastBackStackEntry?.name != DishHitListFragment.screenKey) {
+                    fragmentReplace(DishHitListFragment(), DishHitListFragment.screenKey)
                 }
                 Unit
             }
