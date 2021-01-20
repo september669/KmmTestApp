@@ -1,10 +1,8 @@
 package org.dda.testwork.shared.coroutine_context
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.dda.ankoLogger.logDebug
 import org.dda.ankoLogger.logError
 import kotlin.coroutines.CoroutineContext
@@ -246,6 +244,7 @@ interface CoroutineExecutionContext : BaseExecutionContext, CoroutineScope {
 
     /***************************************/
 
+/*
     fun <T> Flow<T>.executeOnEach(
         showProgressDelay: Long = SHOW_PROGRESS_DELAY_MS,
         progress: ExecutionProgress = executionProgressGlobalDefault,
@@ -305,6 +304,7 @@ interface CoroutineExecutionContext : BaseExecutionContext, CoroutineScope {
             block = block
         )
     }
+*/
 
     /***************************************/
 

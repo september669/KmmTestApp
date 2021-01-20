@@ -1,4 +1,4 @@
-package org.dda.testwork.shared.mvp
+package org.dda.testwork.shared.redux
 
 sealed class ErrorKind {
     object None : ErrorKind()

@@ -1,44 +1,69 @@
 package org.dda.testwork.androidApp.ui.base
 
-//import org.dda.testwork.androidApp.databinding.BaseFragmentRefreshableBinding.inflate
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.core.view.children
+import androidx.lifecycle.LiveData
+import androidx.viewbinding.ViewBinding
 import org.dda.ankoLogger.logDebug
 import org.dda.testwork.androidApp.databinding.BaseFragmentRefreshableBinding
 import org.dda.testwork.androidApp.ui.utils.setDisplayedChildIfDiffer
 import org.dda.testwork.shared.coroutine_context.ExecutionProgress
-import org.dda.testwork.shared.mvp.BaseViewRedux
-import org.dda.testwork.shared.mvp.ErrorKind
-import org.dda.testwork.shared.mvp.base.CommonMvpView
-import org.dda.testwork.shared.mvp.base.ExceptionHandler
-import org.dda.testwork.shared.mvp.redux.ReduxState
+import org.dda.testwork.shared.redux.*
+import org.dda.testwork.shared.utils.checkWhen
 
 
-interface BaseViewRefreshable<State : ReduxState> : BaseViewRedux<State> {
-
-    fun showRefreshing(enable: Boolean)
-
-}
-
-
-abstract class BaseFragmentRefreshable<State : ReduxState>(@LayoutRes layout: Int) :
-    BaseFragment<State>(layout),
-    BaseViewRefreshable<State> {
+abstract class BaseFragmentRefreshable<
+        VB : ViewBinding,
+        State : ReduxState,
+        Action : ReduxAction,
+        Effect : ReduxSideEffect,
+        VM : BaseReduxViewModel<State, Action, Effect>
+        >(@LayoutRes layoutId: Int) :
+    BaseFragment<State, VB, VM>(layoutId) {
 
 
-    private var _binding: BaseFragmentRefreshableBinding? = null
-    private val binding get() = _binding!!
+    private var _bindingRefreshable: BaseFragmentRefreshableBinding? = null
+    private val bindingRefreshable: BaseFragmentRefreshableBinding
+        get() = _bindingRefreshable!!
 
+    private var _bindingContent: VB? = null
+    protected override val binding: VB
+        get() = _bindingContent!!
 
-    private lateinit var contentView: View
-
-    override val exceptionHandler = object : ExceptionHandler {
-        override fun handle(exc: Throwable, view: CommonMvpView): Boolean {
-            TODO("Not yet implemented")
+    private fun subscribeProgress(data: LiveData<VMEvents.ShowProgress>) {
+        logDebug("subscribeProgress")
+        data.observe(this) { item ->
+            showProgress(item.show, item.progress)
         }
+    }
+
+    private fun subscribeState(data: LiveData<VMEvents.ViewState<State, ErrorKind>>) {
+        logDebug("subscribeState")
+        data.observe(this) { item ->
+            when (item) {
+                is VMEvents.ViewState.ShowContent -> {
+                    showContent(item.content)
+                    renderContent(item.content)
+                }
+                is VMEvents.ViewState.ShowError -> {
+                    showError(item.errorKind)
+                }
+            }.checkWhen()
+        }
+    }
+
+    protected abstract fun renderContent(content: State)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        subscribeProgress(viewModel.liveDataProgress.ld())
+        subscribeState(viewModel.liveDataState.ld())
 
     }
 
@@ -46,38 +71,41 @@ abstract class BaseFragmentRefreshable<State : ReduxState>(@LayoutRes layout: In
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        logDebug { "onCreateView()" }
-        return BaseFragmentRefreshableBinding.inflate(inflater, container, false).let { bind ->
-            contentView = inflater.inflate(layout, bind.containerLayout, true)
-            _binding = bind
-            bind.root
-        }
+    ): View? {
+        logDebug("onCreateView()")
+        return BaseFragmentRefreshableBinding.inflate(inflater, container, false).also { rootBind ->
+            val contentView = inflater.inflate(layoutId, rootBind.containerLayout, true).let {
+                (it as ViewGroup).children.first()
+            }
+            _bindingRefreshable = rootBind
+            _bindingContent = bindView(contentView)
+        }.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _bindingRefreshable = null
+        _bindingContent = null
     }
 
 
     protected var isRefreshing: Boolean
-        get() = binding.refreshLayout.isRefreshing
+        get() = bindingRefreshable.refreshLayout.isRefreshing
         set(value) {
-            binding.refreshLayout.isRefreshing = value
+            bindingRefreshable.refreshLayout.isRefreshing = value
         }
 
     protected var isSwipeToRefreshEnabled: Boolean
-        get() = binding.refreshLayout.isEnabled
+        get() = bindingRefreshable.refreshLayout.isEnabled
         set(value) {
-            binding.refreshLayout.isEnabled = value
+            bindingRefreshable.refreshLayout.isEnabled = value
         }
 
     protected fun setSwipeableChildren(vararg viewIds: Int) {
-        binding.refreshLayout.setSwipeableChildren(*viewIds)
+        bindingRefreshable.refreshLayout.setSwipeableChildren(*viewIds)
     }
 
-    override fun showRefreshing(enable: Boolean) {
+    fun showRefreshing(enable: Boolean) {
         logDebug { "showRefreshing($enable)" }
         if (isRefreshing != enable)
             isRefreshing = enable
@@ -89,8 +117,9 @@ abstract class BaseFragmentRefreshable<State : ReduxState>(@LayoutRes layout: In
     }
 
 
-    override fun renderError(errorKind: ErrorKind) {
-        binding.flipContentError.setDisplayedChildIfDiffer(
+    private fun showError(errorKind: ErrorKind) {
+        logDebug { "showError($errorKind)" }
+        bindingRefreshable.flipContentError.setDisplayedChildIfDiffer(
             if (errorKind is ErrorKind.None) {
                 0
             } else {
@@ -107,7 +136,8 @@ abstract class BaseFragmentRefreshable<State : ReduxState>(@LayoutRes layout: In
         }.checkWhen()*/
     }
 
-    override fun renderContent(content: State) {
-        binding.flipContentError.setDisplayedChildIfDiffer(0)
+    private fun showContent(content: State) {
+        logDebug { "showContent(${content.toLogString()})" }
+        bindingRefreshable.flipContentError.setDisplayedChildIfDiffer(0)
     }
 }

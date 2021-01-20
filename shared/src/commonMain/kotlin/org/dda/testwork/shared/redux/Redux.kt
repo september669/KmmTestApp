@@ -1,4 +1,4 @@
-package org.dda.testwork.shared.mvp.redux
+package org.dda.testwork.shared.redux
 
 import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.logDebug
@@ -15,10 +15,6 @@ class ReduxStore<State : ReduxState, Action : ReduxAction, SideEffect : ReduxSid
     private var _state: State = initState
 
     val state: State get() = _state
-
-    init {
-        dispatcher.dispatch(prevState = state, newState = state)
-    }
 
     fun dispatch(vararg action: Action): State {
         logDebug { "dispatch($action)" }

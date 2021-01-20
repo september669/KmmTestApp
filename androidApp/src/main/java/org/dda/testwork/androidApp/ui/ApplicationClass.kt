@@ -1,15 +1,24 @@
 package org.dda.testwork.androidApp.ui
 
 
-import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
+import androidx.multidex.MultiDexApplication
 import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.configAnkoLogger
 import org.dda.testwork.shared.BuildCfg
+import org.dda.testwork.shared.di.moduleViewModel
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.androidXModule
 
 
-class ApplicationClass : Application(), AnkoLogger {
+class ApplicationClass : MultiDexApplication(), DIAware, AnkoLogger {
+
+    override val di by DI.lazy {
+        import(androidXModule(this@ApplicationClass))
+        importOnce(moduleViewModel)
+    }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -26,4 +35,5 @@ class ApplicationClass : Application(), AnkoLogger {
             applicationTag = BuildCfg.loggingAppTag
         )
     }
+
 }

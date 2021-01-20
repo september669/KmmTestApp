@@ -8,6 +8,17 @@ plugins {
 
 kotlin {
 
+    targets {
+        android {
+            //  fix for "kodein: Cannot inline bytecode built with JVM target 1.8 into bytecode that is being built with JVM target 1.6."
+            tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+        }
+    }
+
     android()
 
     ios {
@@ -23,6 +34,10 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
+
+                repositories {
+                    maven { url = uri("https://dl.bintray.com/icerockdev/moko") }
+                }
 
                 //  coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.Version.coroutinesNative}")
@@ -44,6 +59,10 @@ kotlin {
 
                 //  DI
                 implementation("org.kodein.di:kodein-di:${Deps.Version.kodein}")
+
+                //  MVVM
+                api("dev.icerock.moko:mvvm-core:${Deps.Version.iceRockMvvm}")
+                api("dev.icerock.moko:mvvm-livedata:${Deps.Version.iceRockMvvm}")
             }
         }
         val commonTest by getting {
@@ -60,7 +79,7 @@ kotlin {
 
                 implementation("io.ktor:ktor-client-android:${Deps.Version.ktor}")
 
-                implementation("com.github.moxy-community:moxy:${Deps.Version.moxyMvp}")
+                implementation("dev.icerock.moko:mvvm-livedata-material:${Deps.Version.iceRockMvvm}")
             }
         }
         val androidTest by getting {
@@ -72,7 +91,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 //implementation("com.google.android.material:material:1.2.1")
-                //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+                //implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Deps.Version.coroutinesNative}")
             }
         }
         val iosTest by getting
@@ -100,6 +119,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
 }
 
 val packForXcode by tasks.creating(Sync::class) {

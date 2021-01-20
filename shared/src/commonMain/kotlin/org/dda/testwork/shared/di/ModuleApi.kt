@@ -2,6 +2,7 @@ package org.dda.testwork.shared.di
 
 import io.ktor.client.*
 import io.ktor.http.*
+import org.dda.ankoLogger.logDebug
 import org.dda.testwork.shared.BuildCfg
 import org.dda.testwork.shared.api.ChibbisService
 import org.dda.testwork.shared.api.chibbisClient
@@ -16,10 +17,12 @@ const val moduleApiName = "ChibbisApi"
 val moduleApi = DI.Module(name = moduleApiName) {
 
     bind<HttpClient>() with singleton {
+        diLogger.logDebug("bind<HttpClient>()")
         chibbisClient()
     }
 
     bind<ChibbisService>() with singleton {
+        diLogger.logDebug("bind<ChibbisService>()")
         ChibbisService(
             baseUrl = Url(BuildCfg.API.baseUrl),
             client = instance()

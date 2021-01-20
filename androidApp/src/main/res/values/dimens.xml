@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="edge_margin">16dp</dimen>
+    <dimen name="top_margin">16dp</dimen>
+    <dimen name="bottom_margin">16dp</dimen>
 </resources>

@@ -23,7 +23,7 @@
             >
 
             <View
-                android:id="@+id/search_input_back"
+                android:id="@+id/searchInputBack"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/edge_margin"
@@ -37,19 +37,19 @@
                 />
 
             <ImageView
-                android:id="@+id/search_lens"
+                android:id="@+id/searchLens"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="5dp"
                 android:src="@drawable/ic_search_lens"
-                app:layout_constraintBottom_toBottomOf="@id/search_input_back"
-                app:layout_constraintStart_toStartOf="@id/search_input_back"
-                app:layout_constraintTop_toTopOf="@id/search_input_back"
+                app:layout_constraintBottom_toBottomOf="@id/searchInputBack"
+                app:layout_constraintStart_toStartOf="@id/searchInputBack"
+                app:layout_constraintTop_toTopOf="@id/searchInputBack"
 
                 />
 
             <EditText
-                android:id="@+id/search_input"
+                android:id="@+id/searchInput"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="6dp"
@@ -60,16 +60,25 @@
                 android:maxLines="1"
                 android:textSize="16sp"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toBottomOf="@id/search_input_back"
-                app:layout_constraintEnd_toEndOf="@id/search_input_back"
-                app:layout_constraintStart_toEndOf="@id/search_lens"
-                app:layout_constraintTop_toTopOf="@id/search_input_back"
+                app:layout_constraintBottom_toBottomOf="@id/searchInputBack"
+                app:layout_constraintEnd_toEndOf="@id/searchInputBack"
+                app:layout_constraintStart_toEndOf="@id/searchLens"
+                app:layout_constraintTop_toTopOf="@id/searchInputBack"
 
                 />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productCardRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

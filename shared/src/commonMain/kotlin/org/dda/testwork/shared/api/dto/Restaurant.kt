@@ -1,7 +1,6 @@
 package org.dda.testwork.shared.api.dto
 
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 
 //class Restaurants : ArrayList<RestaurantsItem>()
@@ -13,7 +12,7 @@ data class RestaurantItem(
     @SerialName("DeliveryTime")
     val deliveryTime: Int,
     @SerialName("Logo")
-    val logo: String,
+    val logoUrl: String,
     @SerialName("MinCost")
     val minCost: Int,
     @SerialName("Name")
@@ -24,7 +23,9 @@ data class RestaurantItem(
     val reviewsCount: Int,
     @SerialName("Specializations")
     val specializations: List<Specialization>
-)
+) {
+    val id: String get() = name
+}
 
 @Serializable
 data class Specialization(
