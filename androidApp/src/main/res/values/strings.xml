@@ -10,4 +10,6 @@
     <string name="main_menu_hits">Хиты</string>
     <string name="main_menu_reviews">Отзывы</string>
 
+    <string name="user_about_fmt">%1$s о ресторане %2$s</string>
+
 </resources>

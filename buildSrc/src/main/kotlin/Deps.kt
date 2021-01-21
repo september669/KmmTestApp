@@ -8,6 +8,7 @@ object Deps {
 
         const val ktor = "1.5.0"
         const val kotlinSerialization = "1.0.1"
+        const val kotlinxDateTime = "0.1.1"
 
         const val kodein = "7.2.0"
 

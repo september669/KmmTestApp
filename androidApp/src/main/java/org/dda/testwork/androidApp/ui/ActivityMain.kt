@@ -13,6 +13,7 @@ import org.dda.testwork.androidApp.R
 import org.dda.testwork.androidApp.databinding.ActivityMainBinding
 import org.dda.testwork.androidApp.ui.dish_hit_list.DishHitListFragment
 import org.dda.testwork.androidApp.ui.restaurant_list.RestaurantListFragment
+import org.dda.testwork.androidApp.ui.restaurant_review_list.RestaurantReviewListFragment
 import org.dda.testwork.shared.redux.VMEvents
 import org.dda.testwork.shared.utils.checkWhen
 import org.dda.testwork.shared.view_model.main_screen.MainScreenViewModel
@@ -59,11 +60,14 @@ class ActivityMain : AppCompatActivity(), DIAware, AnkoLogger {
 
         binding.activityMainNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.mainMenuPageRestaurantList -> {
+                R.id.mainMenuRestaurantList -> {
                     viewModel fire Action.ChangeScreen(Screen.RestaurantList)
                 }
-                R.id.mainMenuPageDishHitList -> {
+                R.id.mainMenuDishHitList -> {
                     viewModel fire Action.ChangeScreen(Screen.DishHitList)
+                }
+                R.id.mainMenuRestaurantReviewList -> {
+                    viewModel fire Action.ChangeScreen(Screen.RestaurantReviewList)
                 }
                 else -> {
                     logError("Unknown menuItem: ${menuItem.title}")
@@ -87,6 +91,12 @@ class ActivityMain : AppCompatActivity(), DIAware, AnkoLogger {
             Screen.DishHitList -> {
                 if (supportFragmentManager.lastBackStackEntry?.name != DishHitListFragment.screenKey) {
                     fragmentReplace(DishHitListFragment(), DishHitListFragment.screenKey)
+                }
+                Unit
+            }
+            Screen.RestaurantReviewList -> {
+                if (supportFragmentManager.lastBackStackEntry?.name != RestaurantReviewListFragment.screenKey) {
+                    fragmentReplace(RestaurantReviewListFragment(), RestaurantReviewListFragment.screenKey)
                 }
                 Unit
             }

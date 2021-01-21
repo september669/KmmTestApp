@@ -16,5 +16,9 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+
+        //  kotlinx-datetime
+        maven { url = uri("https://kotlin.bintray.com/kotlinx/") }
+
     }
 }

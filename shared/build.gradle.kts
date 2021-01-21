@@ -57,6 +57,9 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${Deps.Version.kotlinSerialization}")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Deps.Version.kotlinSerialization}")
 
+                //  kotlinx-datetime, https://github.com/Kotlin/kotlinx-datetime
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Deps.Version.kotlinxDateTime}")
+
                 //  DI
                 implementation("org.kodein.di:kodein-di:${Deps.Version.kodein}")
 

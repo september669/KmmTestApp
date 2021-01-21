@@ -37,6 +37,6 @@ interface MainState {
     class Effect : ReduxSideEffect
 
     enum class Screen {
-        RestaurantList, DishHitList
+        RestaurantList, DishHitList, RestaurantReviewList
     }
 }

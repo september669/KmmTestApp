@@ -3,6 +3,8 @@
 package org.dda.testwork.androidApp.ui.utils
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Looper
 import android.util.TypedValue
@@ -118,3 +120,34 @@ class ArgumentJson<T : Any>(val clazz: KClass<T>) : kotlin.properties.ReadWriteP
 }
 
 fun <T : Any> argJson(clazz: KClass<T>): ArgumentJson<T> = ArgumentJson(clazz)
+
+
+/******************    Display and resources                            ***************************/
+
+private val resources get() = Resources.getSystem()
+val displayDensity by lazy { resources.displayMetrics.density }
+val scaledDensity by lazy { resources.displayMetrics.scaledDensity }
+
+val Int.pxTodp: Int get() = (this / displayDensity).toInt()
+
+val Int.dpToPx: Int get() = (this * displayDensity).toInt()
+
+val Int.spToPx: Int get() = (this * scaledDensity).toInt()
+
+val Float.spToPx: Float get() = (this * scaledDensity)
+
+val Float.pxToSp: Float get() = (this / scaledDensity)
+
+val Float.dpToPx: Int get() = (this * displayDensity).toInt()
+
+fun Int.toStringColor(): String = String.format("#%06X", 0xFFFFFF and this)
+
+fun Int.toHsv(): FloatArray {
+    val res = FloatArray(3)
+    Color.colorToHSV(this, res)
+    return res
+}
+
+val Int.resourceName: String get() = resources.getResourceName(this)
+val Int.resourceEntryName: String get() = resources.getResourceEntryName(this)
+

@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import org.dda.testwork.shared.api.dto.Dish
 import org.dda.testwork.shared.api.dto.RestaurantItem
+import org.dda.testwork.shared.api.dto.RestaurantReview
 
 class ChibbisService(
     private val baseUrl: Url,
@@ -19,6 +20,9 @@ class ChibbisService(
         return client.get(baseUrl + "hits")
     }
 
+    suspend fun getRestaurantReviews(): List<RestaurantReview> {
+        return client.get(baseUrl + "reviews")
+    }
 
 }
 

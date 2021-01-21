@@ -23,6 +23,9 @@ dependencies {
     //  Kotlin serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Deps.Version.kotlinSerialization}")
 
+    //  kotlinx-datetime, https://github.com/Kotlin/kotlinx-datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Deps.Version.kotlinxDateTime}")
+
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

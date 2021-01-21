@@ -4,6 +4,7 @@ import org.dda.ankoLogger.logDebug
 import org.dda.testwork.shared.view_model.dish_hit_list.DishHitListViewModel
 import org.dda.testwork.shared.view_model.main_screen.MainScreenViewModel
 import org.dda.testwork.shared.view_model.restaurant_list.RestaurantListViewModel
+import org.dda.testwork.shared.view_model.restaurant_review_list.RestaurantReviewListViewModel
 import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.instance
@@ -29,6 +30,11 @@ val moduleViewModel = DI.Module(name = moduleViewModelName) {
     bind<DishHitListViewModel>() with provider {
         diLogger.logDebug("bind<DishHitListViewModel>()")
         DishHitListViewModel(instance())
+    }
+
+    bind<RestaurantReviewListViewModel>() with provider {
+        diLogger.logDebug("bind<RestaurantReviewListViewModel>()")
+        RestaurantReviewListViewModel(instance())
     }
 
 }
