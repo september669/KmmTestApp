@@ -27,6 +27,7 @@ class RestaurantListFragment :
             State,
             Action,
             Effect,
+            Nothing,
             RestaurantListViewModel
             >(R.layout.fragment_restaurant_list) {
 

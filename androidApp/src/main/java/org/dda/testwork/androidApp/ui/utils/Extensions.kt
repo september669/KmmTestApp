@@ -1,9 +1,12 @@
 package org.dda.testwork.androidApp.ui.utils
 
+import java.io.ByteArrayOutputStream
 import java.lang.ref.WeakReference
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
 import kotlin.math.absoluteValue
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -96,3 +99,14 @@ fun Double.formatOrInt(
         }.format(this)
     }
 }
+
+/***************************************/
+
+
+fun String.gzip(): ByteArray {
+    val bos = ByteArrayOutputStream()
+    GZIPOutputStream(bos).bufferedWriter().use { it.write(this) }
+    return bos.toByteArray()
+}
+
+fun ByteArray.unGzip(): String = GZIPInputStream(inputStream()).bufferedReader().use { it.readText() }

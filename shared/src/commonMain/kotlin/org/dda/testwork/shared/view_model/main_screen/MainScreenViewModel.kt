@@ -4,7 +4,7 @@ import org.dda.testwork.shared.redux.*
 import org.dda.testwork.shared.view_model.main_screen.MainState.*
 
 
-class MainScreenViewModel : BaseReduxViewModel<State, Action, Effect>() {
+class MainScreenViewModel : BaseReduxViewModel<State, Action, Effect, Nothing>() {
 
     override val redux = initState {
         State(Screen.RestaurantList)

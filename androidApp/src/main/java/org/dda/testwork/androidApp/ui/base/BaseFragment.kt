@@ -66,8 +66,9 @@ abstract class BaseFragment<
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val (clazz, factory) = makeViewModelBluePrint()
+        val (clazz, factory, alsoBlock) = makeViewModelBluePrint()
         viewModel = ViewModelProvider(this, factory).get(clazz.java)
+        alsoBlock(viewModel)
         logError { "ViewModelProvider return: $viewModel" }
     }
 
@@ -131,15 +132,17 @@ abstract class BaseFragment<
 
     data class ViewModelBluePrint<VM : ViewModel>(
         val viewModelClass: KClass<VM>,
-        val factory: ViewModelProvider.Factory
+        val factory: ViewModelProvider.Factory,
+        val also: (vm: VM) -> Unit
     )
 
-    protected inline fun <reified VM : ViewModel> viewModelBluePrint(): ViewModelBluePrint<VM> {
+    protected inline fun <reified VM : ViewModel> viewModelBluePrint(noinline also: (vm: VM) -> Unit = {}): ViewModelBluePrint<VM> {
         return ViewModelBluePrint(
             viewModelClass = VM::class,
             factory = createViewModelFactory {
                 di.direct.instance<VM>()
-            }
+            },
+            also = also
         )
     }
 

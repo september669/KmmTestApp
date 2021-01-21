@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("plugin.serialization") version Deps.Version.kotlin
     //id("kotlin-kapt")
 }
 
@@ -17,6 +18,10 @@ dependencies {
 
     implementation("org.kodein.di:kodein-di-framework-android-x:${Deps.Version.kodein}")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Deps.Version.coroutinesNative}")
+
+    //  Kotlin serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Deps.Version.kotlinSerialization}")
 
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
@@ -24,12 +29,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.dynamicanimation:dynamicanimation:1.0.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Deps.Version.coroutinesNative}")
+
 
     implementation("dev.icerock.moko:mvvm-viewbinding:${Deps.Version.iceRockMvvm}")
-
-
-    //implementation("com.kirich1409.viewbindingpropertydelegate:vbpd-noreflection:1.4.1")
 
 
     implementation("com.xwray:groupie:${Deps.Version.groupie}")
@@ -38,6 +40,9 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+
+    //https://github.com/florent37/KotlinPleaseAnimate
+    implementation("com.github.florent37:kotlinpleaseanimate:1.0.4")
 
 
 }

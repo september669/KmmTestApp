@@ -7,6 +7,8 @@ import io.ktor.utils.io.errors.*
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.logDebug
 import org.dda.ankoLogger.logError
@@ -20,6 +22,7 @@ abstract class BaseReduxViewModel<
         State : ReduxState,
         Action : ReduxAction,
         Effect : ReduxSideEffect,
+        OneTimeAction : Any,
         > : ViewModel(), AnkoLogger, CoroutineExecutionContext {
 
     abstract val exceptionHandler: ExceptionHandler
@@ -42,6 +45,10 @@ abstract class BaseReduxViewModel<
     }
     val liveDataProgress: LiveData<VMEvents.ShowProgress> by lazy { ldProgress }
 
+    private val flowOneTimeActionMutable = MutableSharedFlow<OneTimeAction>(replay = 0)
+    val flowOneTimeAction: SharedFlow<OneTimeAction>
+        get() = flowOneTimeActionMutable
+
     final override fun showProgress(show: Boolean, progress: ExecutionProgress) {
         ldProgress.postValue(VMEvents.ShowProgress(show, progress))
     }
@@ -51,12 +58,20 @@ abstract class BaseReduxViewModel<
     }
     val liveDataState: LiveData<VMEvents.ViewState<State, ErrorKind>> by lazy { ldState }
 
+
     fun showContent(content: VMEvents.ViewState.ShowContent<State>) {
         ldState.postValue(content)
     }
 
     fun showError(error: VMEvents.ViewState.ShowError<ErrorKind>) {
         ldState.postValue(error)
+    }
+
+    fun postOneTimeAction(event: OneTimeAction) {
+        launchUi {
+            logDebug { "postOneTimeAction($event)" }
+            flowOneTimeActionMutable.emit(event)
+        }
     }
 
     override fun handleException(exc: Throwable): Boolean {

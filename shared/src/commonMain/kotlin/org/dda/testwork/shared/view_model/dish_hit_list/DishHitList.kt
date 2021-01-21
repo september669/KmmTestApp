@@ -10,7 +10,7 @@ import org.dda.testwork.shared.view_model.dish_hit_list.DishHitList.*
 
 class DishHitListViewModel(
     private val repoDishes: RepoDishes
-) : BaseReduxViewModel<State, Action, Effect>() {
+) : BaseReduxViewModel<State, Action, Effect, OneTimeAction>() {
 
     override val exceptionHandler: ExceptionHandler
         get() = TODO("Not yet implemented")
@@ -25,7 +25,13 @@ class DishHitListViewModel(
         action.reduce(prevState, this)
     }.withSideEffects { state, effect ->
         when (effect) {
-            Effect.OnRefresh -> doRefresh(state)
+            Effect.OnRefresh -> {
+                doRefresh(state)
+                Unit
+            }
+            is Effect.OnDishImageClick -> {
+                postOneTimeAction(OneTimeAction.ShowHuge(effect.dish))
+            }
         }.checkWhen()
     }
 
@@ -59,5 +65,11 @@ interface DishHitList {
 
     sealed class Effect : ReduxSideEffect {
         object OnRefresh : Effect()
+        data class OnDishImageClick(val dish: Dish) : Effect()
+    }
+
+
+    sealed class OneTimeAction {
+        data class ShowHuge(val dish: Dish) : OneTimeAction()
     }
 }

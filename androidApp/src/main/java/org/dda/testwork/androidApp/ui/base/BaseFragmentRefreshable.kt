@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.children
 import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.flow.SharedFlow
 import org.dda.ankoLogger.logDebug
 import org.dda.testwork.androidApp.databinding.BaseFragmentRefreshableBinding
 import org.dda.testwork.androidApp.ui.utils.setDisplayedChildIfDiffer
@@ -22,7 +23,8 @@ abstract class BaseFragmentRefreshable<
         State : ReduxState,
         Action : ReduxAction,
         Effect : ReduxSideEffect,
-        VM : BaseReduxViewModel<State, Action, Effect>
+        OneTimeAction : Any,
+        VM : BaseReduxViewModel<State, Action, Effect, OneTimeAction>
         >(@LayoutRes layoutId: Int) :
     BaseFragment<State, VB, VM>(layoutId) {
 
@@ -57,8 +59,21 @@ abstract class BaseFragmentRefreshable<
         }
     }
 
+    private fun subscribeOneTimeAction(flowOneTimeAction: SharedFlow<OneTimeAction>) {
+        logDebug("subscribeSingleEvent")
+        flowOneTimeAction.executeOnEach { action ->
+            renderOnce(action)
+        }
+    }
+
     protected abstract fun renderContent(content: State)
+
+    protected open fun renderOnce(action: OneTimeAction) {
+        throw NotImplementedError()
+    }
+
     protected abstract fun onRetryButtonClicked()
+
     protected abstract fun onRefresh()
 
 
@@ -67,6 +82,7 @@ abstract class BaseFragmentRefreshable<
 
         subscribeProgress(viewModel.liveDataProgress.ld())
         subscribeState(viewModel.liveDataState.ld())
+        subscribeOneTimeAction(viewModel.flowOneTimeAction)
 
     }
 
@@ -149,4 +165,6 @@ abstract class BaseFragmentRefreshable<
         logDebug { "showContent(${content.toLogString()})" }
         bindingRefreshable.flipContentError.setDisplayedChildIfDiffer(0)
     }
+
+
 }

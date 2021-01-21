@@ -10,7 +10,7 @@ import org.dda.testwork.shared.view_model.restaurant_list.RestaurantList.*
 
 class RestaurantListViewModel(
     private val repoRestaurants: RepoRestaurants
-) : BaseReduxViewModel<State, Action, Effect>() {
+) : BaseReduxViewModel<State, Action, Effect, Nothing>() {
 
     override val redux = initState {
         State.PreRequest("").also {

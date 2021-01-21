@@ -3,6 +3,7 @@ package org.dda.testwork.androidApp.ui.dish_hit_list
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.Section
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.dda.ankoLogger.logDebug
 import org.dda.testwork.androidApp.R
 import org.dda.testwork.androidApp.databinding.FragmentDishHitListBinding
@@ -19,6 +20,7 @@ class DishHitListFragment :
             State,
             Action,
             Effect,
+            OneTimeAction,
             DishHitListViewModel
             >(R.layout.fragment_dish_hit_list) {
 
@@ -28,7 +30,15 @@ class DishHitListFragment :
 
     private val groupDishHitItem = Section()
 
-    override fun makeViewModelBluePrint() = viewModelBluePrint<DishHitListViewModel>()
+    private val effectFlow = MutableSharedFlow<Effect>()
+
+    override fun makeViewModelBluePrint() = viewModelBluePrint<DishHitListViewModel> { viewModel ->
+        with(viewModel) {
+            effectFlow.executeOnEach { effect ->
+                fire(effect)
+            }
+        }
+    }
 
     override fun bindView(view: View): FragmentDishHitListBinding {
         logDebug("bindView()")
@@ -56,10 +66,22 @@ class DishHitListFragment :
                     content.list.map { item ->
                         ItemDishHit(
                             owner = this,
-                            payload = item
+                            payload = item,
+                            effectFlow = effectFlow
                         )
                     }
                 )
+            }
+        }.checkWhen()
+    }
+
+    override fun renderOnce(action: OneTimeAction) {
+        logDebug("renderOnce($action)")
+        when (action) {
+            is OneTimeAction.ShowHuge -> {
+                ImageDialog().apply {
+                    dish = action.dish
+                }.show(childFragmentManager, null)
             }
         }.checkWhen()
     }
