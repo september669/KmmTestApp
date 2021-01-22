@@ -61,7 +61,7 @@ abstract class BaseFragmentRefreshable<
 
     private fun subscribeOneTimeAction(flowOneTimeAction: SharedFlow<OneTimeAction>) {
         logDebug("subscribeSingleEvent")
-        flowOneTimeAction.executeOnEach { action ->
+        flowOneTimeAction.collectOnEach { action ->
             renderOnce(action)
         }
     }

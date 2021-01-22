@@ -1,87 +1,72 @@
 package org.dda.testwork.androidApp.ui
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import dev.icerock.moko.mvvm.createViewModelFactory
-import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.logDebug
 import org.dda.ankoLogger.logError
 import org.dda.testwork.androidApp.R
 import org.dda.testwork.androidApp.databinding.ActivityMainBinding
+import org.dda.testwork.androidApp.ui.base.BaseActivity
 import org.dda.testwork.androidApp.ui.dish_hit_list.DishHitListFragment
 import org.dda.testwork.androidApp.ui.restaurant_list.RestaurantListFragment
 import org.dda.testwork.androidApp.ui.restaurant_review_list.RestaurantReviewListFragment
-import org.dda.testwork.shared.redux.VMEvents
 import org.dda.testwork.shared.utils.checkWhen
 import org.dda.testwork.shared.view_model.main_screen.MainScreenViewModel
-import org.dda.testwork.shared.view_model.main_screen.MainState
 import org.dda.testwork.shared.view_model.main_screen.MainState.Action
 import org.dda.testwork.shared.view_model.main_screen.MainState.Screen
-import org.kodein.di.DIAware
-import org.kodein.di.android.closestDI
 import org.kodein.di.direct
 import org.kodein.di.instance
 
 
-class ActivityMain : AppCompatActivity(), DIAware, AnkoLogger {
+class ActivityMain : BaseActivity<ActivityMainBinding>() {
 
     private val fragmentContainerId = R.id.activityMainFragmentLayout
 
-    override val di by closestDI()
-
     lateinit var viewModel: MainScreenViewModel
 
-    private lateinit var binding: ActivityMainBinding
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        logDebug { "onCreate()" }
-        super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        viewModel = ViewModelProvider(this,
-            createViewModelFactory {
-                direct.instance<MainScreenViewModel>()
-            }
-        )[MainScreenViewModel::class.java]
-
-        viewModel.liveDataState.ld().observe(this) { state ->
-            when (state) {
-                is VMEvents.ViewState.ShowContent -> renderContent(state.content)
-                is VMEvents.ViewState.ShowError -> TODO()
-            }.checkWhen()
-        }
-
-
-        binding.activityMainNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.mainMenuRestaurantList -> {
-                    viewModel fire Action.ChangeScreen(Screen.RestaurantList)
+    override fun inflateViewBind(): ActivityMainBinding {
+        logDebug("inflateViewBind()")
+        return ActivityMainBinding.inflate(layoutInflater).also { binding ->
+            viewModel = ViewModelProvider(this,
+                createViewModelFactory {
+                    direct.instance<MainScreenViewModel>()
                 }
-                R.id.mainMenuDishHitList -> {
-                    viewModel fire Action.ChangeScreen(Screen.DishHitList)
-                }
-                R.id.mainMenuRestaurantReviewList -> {
-                    viewModel fire Action.ChangeScreen(Screen.RestaurantReviewList)
-                }
-                else -> {
-                    logError("Unknown menuItem: ${menuItem.title}")
-                    viewModel fire Action.ChangeScreen(Screen.RestaurantList)
+            )[MainScreenViewModel::class.java]
+
+            logDebug { "createViewModelFactory(): $viewModel" }
+
+            launchUi {
+                viewModel.flowOneTimeAction.collectOnEach {
+                    renderContent(it)
                 }
             }
-            true
+
+            binding.activityMainNavigation.setOnNavigationItemSelectedListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.mainMenuRestaurantList -> {
+                        viewModel fire Action.ChangeScreen(Screen.RestaurantList)
+                    }
+                    R.id.mainMenuDishHitList -> {
+                        viewModel fire Action.ChangeScreen(Screen.DishHitList)
+                    }
+                    R.id.mainMenuRestaurantReviewList -> {
+                        viewModel fire Action.ChangeScreen(Screen.RestaurantReviewList)
+                    }
+                    else -> {
+                        logError("Unknown menuItem: ${menuItem.title}")
+                        viewModel fire Action.ChangeScreen(Screen.RestaurantList)
+                    }
+                }
+                true
+            }
         }
     }
 
-
-    private fun renderContent(content: MainState.State) {
-        logDebug { "renderContent($content)" }
-        when (content.screen) {
+    private fun renderContent(screen: Screen) {
+        logDebug { "renderContent($screen)" }
+        when (screen) {
             Screen.RestaurantList -> {
                 if (supportFragmentManager.lastBackStackEntry?.name != RestaurantListFragment.screenKey) {
                     fragmentReplace(RestaurantListFragment(), RestaurantListFragment.screenKey)
@@ -115,6 +100,15 @@ class ActivityMain : AppCompatActivity(), DIAware, AnkoLogger {
             .replace(fragmentContainerId, fragment, screenKey)
             .addToBackStack(screenKey)
             .commit()
+    }
+
+    override fun onBackPressed() {
+        logDebug { "onBackPressed() backStackEntryCount: ${supportFragmentManager.backStackEntryCount} " }
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStack()
+        } else {
+            finish()
+        }
     }
 }
 

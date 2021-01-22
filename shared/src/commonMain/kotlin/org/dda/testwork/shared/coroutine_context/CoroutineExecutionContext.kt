@@ -246,7 +246,7 @@ interface CoroutineExecutionContext : BaseExecutionContext, CoroutineScope {
     /***************************************/
 
 
-    fun <T> Flow<T>.executeOnEach(
+    fun <T> Flow<T>.collectOnEach(
         showProgressDelay: Long = SHOW_PROGRESS_DELAY_MS,
         progress: ExecutionProgress = executionProgressGlobalDefault,
         mutex: Mutex? = null,
@@ -288,26 +288,6 @@ interface CoroutineExecutionContext : BaseExecutionContext, CoroutineScope {
         }.launchIn(this@CoroutineExecutionContext + coroutineName("executeOnEach"))
     }
 
-    /*
-    fun <T> ReceiveChannel<T>.executeOnEach(
-        showProgressDelay: Long = SHOW_PROGRESS_DELAY_MS,
-        progress: ExecutionProgress = executionProgressGlobalDefault,
-        mutex: Mutex? = null,
-        showProgress: Boolean = false,
-        blockContext: CoroutineContext = dispatchers.main,
-        block: suspend CoroutineScope.(item: T) -> Unit
-    ): Job {
-        return consumeAsFlow().executeOnEach(
-            showProgressDelay = showProgressDelay,
-            progress = progress,
-            mutex = mutex,
-            showProgress = showProgress,
-            blockContext = blockContext,
-            block = block
-        )
-    }
-*/
-
     /***************************************/
 
     override fun cleanExecutionContext() {
@@ -317,4 +297,9 @@ interface CoroutineExecutionContext : BaseExecutionContext, CoroutineScope {
     }
 }
 
+
+suspend fun <T> MutableSharedFlow<T>.whenSubscribed(block: suspend MutableSharedFlow<T>.() -> Unit) {
+    subscriptionCount.first { activeCount -> activeCount > 0 }
+    block(this)
+}
 

@@ -1,21 +1,30 @@
 package org.dda.testwork.shared.view_model.main_screen
 
+import org.dda.ankoLogger.logError
 import org.dda.testwork.shared.redux.*
 import org.dda.testwork.shared.view_model.main_screen.MainState.*
 
 
-class MainScreenViewModel : BaseReduxViewModel<State, Action, Effect, Nothing>() {
+class MainScreenViewModel : BaseReduxViewModel<State, Action, Effect, Screen>() {
 
     override val redux = initState {
-        State(Screen.RestaurantList)
+        State(Screen.RestaurantList).also {
+            postOneTimeAction(it.screen)
+        }
     }.withActions { prevState, action ->
-        action.reduce(prevState, this)
+        action.reduce(prevState, this).also {
+            postOneTimeAction(it.screen)
+        }
     }.withSideEffects { state, effect ->
 
     }
 
-    override val exceptionHandler: ExceptionHandler
-        get() = TODO("Not yet implemented")
+    override val exceptionHandler = object : ExceptionHandler {
+        override fun handle(exc: Throwable): Boolean {
+            logError("", exc)
+            return false
+        }
+    }
 
 }
 
@@ -35,6 +44,7 @@ interface MainState {
     }
 
     class Effect : ReduxSideEffect
+
 
     enum class Screen {
         RestaurantList, DishHitList, RestaurantReviewList

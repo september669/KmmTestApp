@@ -7,16 +7,12 @@ import io.ktor.utils.io.errors.*
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.*
 import org.dda.ankoLogger.AnkoLogger
 import org.dda.ankoLogger.logDebug
 import org.dda.ankoLogger.logError
 import org.dda.ankoLogger.logWarn
-import org.dda.testwork.shared.coroutine_context.CoroutineExecutionContext
-import org.dda.testwork.shared.coroutine_context.ExecutionProgress
-import org.dda.testwork.shared.coroutine_context.coroutineDispatchers
-import org.dda.testwork.shared.coroutine_context.executionProgressGlobalDefault
+import org.dda.testwork.shared.coroutine_context.*
 
 abstract class BaseReduxViewModel<
         State : ReduxState,
@@ -49,6 +45,7 @@ abstract class BaseReduxViewModel<
     val flowOneTimeAction: SharedFlow<OneTimeAction>
         get() = flowOneTimeActionMutable
 
+
     final override fun showProgress(show: Boolean, progress: ExecutionProgress) {
         ldProgress.postValue(VMEvents.ShowProgress(show, progress))
     }
@@ -70,12 +67,15 @@ abstract class BaseReduxViewModel<
     fun postOneTimeAction(event: OneTimeAction) {
         launchUi {
             logDebug { "postOneTimeAction($event)" }
-            flowOneTimeActionMutable.emit(event)
+            flowOneTimeActionMutable.whenSubscribed {
+                emit(event)
+            }
+
         }
     }
 
     override fun handleException(exc: Throwable): Boolean {
-        logDebug { "handleException(${exc::class.simpleName}: ${exc.message})" }
+        logError { "handleException(${exc::class.simpleName}: ${exc.message})" }
         val isProcessed = exceptionHandler.handle(exc)
         if (!isProcessed && exc !is CancellationException) {
             logError("Did not handle exception", exc)

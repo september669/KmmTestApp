@@ -34,7 +34,7 @@ class DishHitListFragment :
 
     override fun makeViewModelBluePrint() = viewModelBluePrint<DishHitListViewModel> { viewModel ->
         with(viewModel) {
-            effectFlow.executeOnEach { effect ->
+            effectFlow.collectOnEach { effect ->
                 fire(effect)
             }
         }
