@@ -5,6 +5,7 @@ import io.ktor.http.*
 import org.dda.ankoLogger.logDebug
 import org.dda.testwork.shared.BuildCfg
 import org.dda.testwork.shared.api.ChibbisService
+import org.dda.testwork.shared.api.ChibbisServiceImpl
 import org.dda.testwork.shared.api.chibbisClient
 import org.kodein.di.DI
 import org.kodein.di.bind
@@ -23,7 +24,7 @@ val moduleApi = DI.Module(name = moduleApiName) {
 
     bind<ChibbisService>() with singleton {
         diLogger.logDebug("bind<ChibbisService>()")
-        ChibbisService(
+        ChibbisServiceImpl(
             baseUrl = Url(BuildCfg.API.baseUrl),
             client = instance()
         )

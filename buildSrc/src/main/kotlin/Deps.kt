@@ -2,7 +2,7 @@ object Deps {
     object Version {
 
         const val kotlin = "1.4.21"
-        const val kotlinxAtomicfu = "0.15.0"
+        const val kotlinxAtomicfu = "0.14.4"
         //const val coroutines =  "1.4.2"
         const val coroutinesNative = "1.4.2-native-mt"
 
@@ -12,7 +12,6 @@ object Deps {
 
         const val kodein = "7.2.0"
 
-        const val moxyMvp = "2.2.1"
         const val iceRockMvvm = "0.9.0"
 
 

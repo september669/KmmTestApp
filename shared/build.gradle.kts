@@ -40,22 +40,33 @@ kotlin {
                 }
 
                 //  coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Deps.Version.coroutinesNative}")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core"){
+                    //  W/A for issue for https://github.com/icerockdev/moko-mvvm/issues/97
+                    version { strictly(Deps.Version.coroutinesNative) }
+                }
+
+                //  Kotlin multiplatform / multi-format reflectionless serialization
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core"){
+                    version { strictly(Deps.Version.kotlinSerialization) }
+                }
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json"){
+                    version { strictly(Deps.Version.kotlinSerialization) }
+                }
 
                 //  atomic operations
-                implementation("org.jetbrains.kotlinx:atomicfu:${Deps.Version.kotlinxAtomicfu}")
+                implementation("org.jetbrains.kotlinx:atomicfu"){
+                    //  W/A for issue https://github.com/Kotlin/kotlinx.atomicfu/issues/178
+                    version { strictly(Deps.Version.kotlinxAtomicfu) }
+                }
 
                 //  logging
                 api("org.dda.ankoLogger:AnkoLogger:0.2.1")
 
                 //  http client
-                api("io.ktor:ktor-client-core:${Deps.Version.ktor}")
+                implementation("io.ktor:ktor-client-core:${Deps.Version.ktor}")
                 implementation("io.ktor:ktor-client-cio:${Deps.Version.ktor}")
                 implementation("io.ktor:ktor-client-serialization:${Deps.Version.ktor}")
 
-                //  Kotlin multiplatform / multi-format reflectionless serialization
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${Deps.Version.kotlinSerialization}")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Deps.Version.kotlinSerialization}")
 
                 //  kotlinx-datetime, https://github.com/Kotlin/kotlinx-datetime
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Deps.Version.kotlinxDateTime}")
@@ -66,6 +77,7 @@ kotlin {
                 //  MVVM
                 api("dev.icerock.moko:mvvm-core:${Deps.Version.iceRockMvvm}")
                 api("dev.icerock.moko:mvvm-livedata:${Deps.Version.iceRockMvvm}")
+
             }
         }
         val commonTest by getting {
@@ -77,11 +89,8 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 //implementation("com.google.android.material:material:1.2.1")
-
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Deps.Version.coroutinesNative}")
-
                 implementation("io.ktor:ktor-client-android:${Deps.Version.ktor}")
-
                 implementation("dev.icerock.moko:mvvm-livedata-material:${Deps.Version.iceRockMvvm}")
             }
         }

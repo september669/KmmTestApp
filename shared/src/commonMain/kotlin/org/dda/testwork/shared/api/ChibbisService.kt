@@ -7,20 +7,30 @@ import org.dda.testwork.shared.api.dto.Dish
 import org.dda.testwork.shared.api.dto.RestaurantItem
 import org.dda.testwork.shared.api.dto.RestaurantReview
 
-class ChibbisService(
+interface ChibbisService {
+
+    suspend fun getRestaurantList(): List<RestaurantItem>
+
+    suspend fun getDishHits(): List<Dish>
+
+    suspend fun getRestaurantReviews(): List<RestaurantReview>
+
+}
+
+class ChibbisServiceImpl(
     private val baseUrl: Url,
     private val client: HttpClient
-) {
+) : ChibbisService {
 
-    suspend fun getRestaurantList(): List<RestaurantItem> {
+    override suspend fun getRestaurantList(): List<RestaurantItem> {
         return client.get(baseUrl + "restaurants")
     }
 
-    suspend fun getDishHits(): List<Dish> {
+    override suspend fun getDishHits(): List<Dish> {
         return client.get(baseUrl + "hits")
     }
 
-    suspend fun getRestaurantReviews(): List<RestaurantReview> {
+    override suspend fun getRestaurantReviews(): List<RestaurantReview> {
         return client.get(baseUrl + "reviews")
     }
 
