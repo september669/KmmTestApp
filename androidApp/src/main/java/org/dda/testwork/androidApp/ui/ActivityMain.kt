@@ -43,6 +43,7 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
                 }
             }
 
+            binding.activityMainNavigation.itemIconTintList = null
             binding.activityMainNavigation.setOnNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.mainMenuRestaurantList -> {

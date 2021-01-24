@@ -42,7 +42,8 @@ kotlin {
                 //  coroutines
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core"){
                     //  W/A for issue for https://github.com/icerockdev/moko-mvvm/issues/97
-                    version { strictly(Deps.Version.coroutinesNative) }
+                    //version { strictly(Deps.Version.coroutinesNative) }
+                    version { Deps.Version.coroutinesNative }
                 }
 
                 //  Kotlin multiplatform / multi-format reflectionless serialization
